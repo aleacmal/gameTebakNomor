@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tebak Nomor</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        text-transform: uppercase;
+        box-sizing: inherit;
+        letter-spacing: 0.2rem;
+      }
+
+      html {
+        font-size: 62.5%;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #eee;
+        background-color: #222;
+        /* background-color: #60b347; */
+      }
+
+      /* LAYOUT */
+      header {
+        position: relative;
+        height: 35vh;
+        border-bottom: 7px solid #eee;
+      }
+
+      main {
+        height: 65vh;
+        color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+
+      .left {
+        width: 52rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .right {
+        width: 52rem;
+        font-size: 2rem;
+      }
+
+      /* ELEMENTS STYLE */
+      h1 {
+        font-size: 4rem;
+        text-align: center;
+        position: absolute;
+        width: 100%;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .number {
+        background: #eee;
+        color: #333;
+        font-size: 6rem;
+        width: 15rem;
+        padding: 3rem 0rem;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+      }
+
+      .between {
+        font-size: 1.8rem;
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+      }
+
+      .again {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+      }
+
+      .guess {
+        background: none;
+        border: 4px solid #eee;
+        font-family: inherit;
+        color: inherit;
+        font-size: 5rem;
+        padding: 2.5rem;
+        width: 25rem;
+        text-align: center;
+        display: block;
+        margin-bottom: 3rem;
+      }
+
+      .btn {
+        border: none;
+        background-color: #eee;
+        color: #222;
+        font-size: 2rem;
+        font-family: inherit;
+        padding: 2rem 3rem;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #ccc;
+      }
+
+      .message {
+        margin-bottom: 8rem;
+        height: 3rem;
+      }
+
+      .label-score {
+        margin-bottom: 2rem;
+      }
+      .nomor{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+      .nmr{
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+      }
+      .nmr > p{
+        font-size: 32px;
+        width: 9%;
+        background-color:  green;
+        text-align: center ;
+        margin-bottom: 10px;
+      }
+      .nmr > p:active{
+        background-color: teal;
+      }
+      
+      @media only screen and (max-width: 500px) {
+        html{
+          font-size: 50.5%;
+        }
+        body {
+          width: 100%;
+          height: 100%;
+        }
+        .nmr > p{
+          margin-bottom: 3px;
+          font-size: 25px;
+        }
+        .number {
+        font-size: 6rem;
+        width: 15rem;
+        }
+        .message{
+          font-size: 15px;
+        }
+        .guess {
+        width: 15rem;
+      }
+}
+      
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Tebak Nomer!</h1>
+      <p class="between">(Diantara 1 - 20)</p>
+      <button class="btn again">Lagi!</button>
+      <div class="number">?</div>
+    </header>
+    <main>
+      <section class="left">
+        <input type="number" class="guess" />
+        <button class="btn check">Check!</button>
+      </section>
+      <section class="right">
+        <p class="message">Mulai menebak....</p>
+        </button>
+        <p class="label-score">💯 Score: <span class="score">20</span></p>
+        <p class="label-highscore">
+          🥇 Highscore: <span class="highscore">0</span>
+        </p>
+      </section>
+      <div class="nomor">
+        <div class="nmr satu-sepu">
+          <p>1</p>
+          <p>2</p>
+          <p>3</p>
+          <p>4</p>
+          <p>5</p>
+          <p>6</p>
+          <p>7</p>
+          <p>8</p>
+          <p>9</p>
+          <p>10</p>
+        </div>
+        <div class="nmr sebe-duapu">
+          <p>11</p>
+          <p>12</p>
+          <p>13</p>
+          <p>14</p>
+          <p>15</p>
+          <p>16</p>
+          <p>17</p>
+          <p>18</p>
+          <p>19</p>
+          <p>20</p>
+        </div>
+        
+      </div> 
+    </main>
+    <script>
+      "use strict";
+
+      let number = Math.trunc(Math.random() * 20 + 1);
+      let score = 20;
+      let highscore = 0;
+
+      const messageF = function (message) {
+        document.querySelector(".message").textContent = message;
+      };
+      const numberF = function (number) {
+        document.querySelector(".number").textContent = number;
+      };
+      const scoreF = function (score) {
+        document.querySelector(".score").textContent = score;
+      };
+
+      document.querySelector(".check").addEventListener("click", function () {
+        let guess = Number(document.querySelector(".guess").value);
+        // when there is no input
+        if (!guess) {
+          messageF("⛔ No Number!");
+
+          // when guess right
+        } else if (guess === number) {
+          messageF("🎉 Anjay bener...");
+          numberF(number);
+          document.querySelector('h1').textContent = "BETUL✅ MANTAP👍!";
+          document.querySelector('h1').style.fontSize = "3rem";
+          document.querySelector("body").style.backgroundColor = "#40d450";
+          document.querySelector(".number").style.width = "30rem";
+
+          if (score > highscore) {
+            highscore = score;
+            document.querySelector(".highscore").textContent = highscore;
+          }
+          // when guess wrong
+        } else if (guess !== number) {
+          if (score > 1) {
+            messageF(
+              guess > number ? "❌coba TURUN lagi🔽" : "❌coba NAIK lagi🔼"
+            );
+            score--;
+            scoreF(score);
+          } else {
+            messageF("💥 Tulul bat Tulul");
+            document.querySelector(".score").textContent = 0;
+            document.querySelector("body").style.backgroundColor = "rgb(120, 28, 28)";
+            document.querySelector('h1').textContent = "ANDA KALAH";   
+          }
+        }
+      });
+      
+      // Coding Challange #1 aleacmal
+      document.querySelector(".again").addEventListener("click", function () {
+        score = 20;
+        number = Math.trunc(Math.random() * 20 + 1);
+        messageF("Mulai menebak....");
+        scoreF(score);
+        numberF("?");
+        document.querySelector(".guess").value = "";
+        document.querySelector("body").style.backgroundColor = "#222";
+        document.querySelector(".number").style.width = "15rem";
+        document.querySelector('h1').textContent = "TEBAK NOMER!";
+      });
+
+
+      // Tombol untuk angka
+      const years = [1991, 2007, 1969, 2020];
+      const ages = [];
+
+      for (let i = 0; i < years.length; i++) {
+        ages.push(2037 - years[i]);
+      }
+      console.log(ages);
+
+      let tomAngka = 0;
+
+
+      // Tombol 1-10
+      document.querySelector(".satu-sepu>p:nth-child(1)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 1;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(2)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 2;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(3)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 3;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(4)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 4;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(5)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 5;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(6)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 6;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(7)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 7;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(8)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 8;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(9)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 9;
+      });
+      document.querySelector(".satu-sepu>p:nth-child(10)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 10;
+      });
+
+      // Tombol 11 -20
+      document.querySelector(".sebe-duapu>p:nth-child(1)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 11;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(2)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 12;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(3)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 13;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(4)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 14;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(5)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 15;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(6)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 16;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(7)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 17;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(8)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 18;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(9)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 19;
+      });
+      document.querySelector(".sebe-duapu>p:nth-child(10)").addEventListener("click", function (){
+        document.querySelector(".guess").value = 20;
+      });
+      
+    </script>
+  </body>
+</html>
